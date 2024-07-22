@@ -1,0 +1,22 @@
+{
+    "name": "sorinserban/mvc-way",
+    "description": "MVC Framework made to work",
+    "type": "project",
+    "require-dev": {
+        "ext-swoole": "^5.1",
+        "swoole/ide-helper": "dev-master",
+        "hyperf/guzzle": "3.1.x-dev",
+        "hyperf": "\u001b\u001b",
+        "hyperf/database": "3.1.x-dev",
+        "hyperf/logger": "3.1.x-dev"
+    },
+    "license": "llm",
+    "authors": [
+        {
+            "name": "Sorin S",
+            "email": "serbansorin1@outlook.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
