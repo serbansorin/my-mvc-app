@@ -5,6 +5,7 @@ namespace Main;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 use Main\Engine\HttpRouting;
+use Main\Engine\RouteProcessor;
 
 /**
  * Route class used to handle the request and route it to the appropriate controller
@@ -13,107 +14,25 @@ use Main\Engine\HttpRouting;
  */
 class Route extends HttpRouting
 {
-    private HttpRouting $httpRouting;
+    public RouteGroup $group;
+    public RouteProcessor $process;
 
     private static $instance;
     public static $routes = [];
 
-    public function __construct($routes = [])
+    public function __construct($routes = null)
     {
-        // i want $this to get the value of self::instance
-        if (!empty($routes)) {
-            $this->processRoutes($routes);
-        } else {
-            self::$routes = include __DIR__ . '/../config/routes.php';
-            $methods = ['get', 'post', 'put', 'delete', 'patch', 'options', 'any'];
-
-            $httpRouting = HttpRouting::getInstance();
-            $this->httpRouting = $httpRouting->getRoutes();
-        }
+        if ($routes)
+            RouteProcessor::newRoutes($routes);
     }
 
-    public function __call($name, $arguments)
+    public function bindNewRoutes($newRoutes): Route
     {
-        if (in_array(strtoupper($name), ['GET', 'POST', 'PUT', 'DELETE'])) {
-            array_unshift($arguments, strtoupper($name));
-            call_user_func_array([$this, 'addRoute'], $arguments);
-        } else {
-            throw new \BadMethodCallException("Method $name does not exist");
-        }
+        $this->routes = array_merge($this->routes, $newRoutes);
+        return $this;
     }
 
-    public static function __callStatic($name, $arguments)
-    {
-        if (in_array(strtoupper($name), ['GET', 'POST', 'PUT', 'DELETE'])) {
-            array_unshift($arguments, strtoupper($name));
-            call_user_func_array([new self(new HttpRouting()), 'addRoute'], $arguments);
-        } else {
-            throw new \BadMethodCallException("Static method $name does not exist");
-        }
-    }
-
-    public function addRoute($method, $path, $controller, $action)
-    {
-        $this->httpRouting->addRoute($method, $path, $controller, $action);
-    }
-
-    public function getRoutes()
-    {
-        return $this->httpRouting->getRoutes();
-    }
-
-    public function bindNewRoutes($newRoutes)
-    {
-        $this->processRoutes($newRoutes);
-    }
-
-    private function processRoutes($routes = [])
-    {
-        // Define your routes here
-        // Route::get('user', 'UserController@index')->name('user');
-        // or
-        // '/path' => ['method','Controller@action', 'middleware(optional)']
-        // transforms into
-        // '/path' => [ 'method' => 'GET', 'controller' => 'Controller', 'action' => 'method', 'middleware' => 'auth' ]
-        $methods = ['get', 'post', 'put', 'delete', 'patch', 'options', 'any'];
-
-        foreach ($routes as $path => $route) {
-            $middleware = $route['middleware'] ?? $route[2] ?? null;
-            $method = strtolower($route['method'] ?? $route[0]) ?? 'get';
-            $controller = $route['controller'] ?? explode('@', $route[1])[0];
-            $action = $route['action'] ?? explode('@', $route[1])[1] ?? 'index';
-
-            if (in_array($method, $methods)) {
-                $this->{$method}($path, $controller, $action);
-                continue;
-            } else {
-                throw new \BadMethodCallException("Method {$method} does not exist.");
-            }
-        }
-    }
-
-    /*
-
-    public static function __callStatic($name, $arguments): ?Route
-    {
-        $instance = Route::getInstance();
-        $methods = ['get', 'post', 'put', 'delete', 'patch', 'options', 'any'];
-
-        if (in_array($name, $methods)) {
-            $path = $arguments[0];
-            $controllerAction = explode('@', $arguments[1]);
-            $controller = $controllerAction[0];
-            $action = $controllerAction[1] ?? 'index';
-
-            return $instance->{$name}($path, $controller, $action);
-        }
-
-        throw new \BadMethodCallException("Method {$name} does not exist.");
-    }
-    */
-
-
-    public static function getInstance()
+    public static function getInstance(): Route
     {
         if (!self::$instance) {
             self::$instance = new static();

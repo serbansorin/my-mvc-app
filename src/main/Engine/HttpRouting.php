@@ -11,13 +11,8 @@ use Main\Route;
  */
 class HttpRouting
 {
-    private $routes = [];
-    private static $instance;
-    const METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'ANY'];
 
-    private function __construct()
-    {
-    }
+    const METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'ANY'];
 
     /**
      * Magic method to handle dynamic method calls for adding routes.
@@ -29,8 +24,8 @@ class HttpRouting
      */
     public function __call($name, $arguments)
     {
-        if (self::processKnownMethods($name, $arguments)) {
-            return self::getInstance();
+        if (static::processKnownMethods($name, $arguments)) {
+            return static::getInstance();
         }
     }
 
@@ -44,8 +39,8 @@ class HttpRouting
      */
     public static function __callStatic($name, $arguments)
     {
-        if (self::processKnownMethods($name, $arguments)) {
-            return self::getInstance();
+        if (static::processKnownMethods($name, $arguments)) {
+            return static::getInstance();
         }
     }
 
@@ -53,7 +48,7 @@ class HttpRouting
     {
         if (in_array(strtoupper($name), self::METHODS)) {
             array_unshift($arguments, strtoupper($name));
-            call_user_func_array([self::getInstance(), 'addRoute'], $arguments);
+            call_user_func_array([static::getInstance(), 'addRoute'], $arguments);
         } else {
             throw new \BadMethodCallException("Method $name does not exist");
         }
@@ -68,7 +63,7 @@ class HttpRouting
      */
     public static function getInstance()
     {
-        return static::$instance ?? new static();
+        return new self();
     }
 
     /**
@@ -89,12 +84,17 @@ class HttpRouting
         ];
     }
 
+    protected function getRoute($path)
+    {
+        return Route::$routes[$path];
+    }
+
     /**
      * Get the registered routes.
      *
      * @return array The registered routes.
      */
-    public function getRoutes()
+    protected function getRoutes()
     {
         return Route::$routes;
     }

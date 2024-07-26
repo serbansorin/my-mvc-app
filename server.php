@@ -16,9 +16,9 @@ const RESOURCES_DIR = ROOT_DIR . '/resources';
 // Initialize the application instance
 $app = \Main\Application::getInstance();
 
-require_once CONFIG_DIR . '/services.php';
-// Create a new Swoole HTTP server
-$http = new Swoole\Http\Server('0.0.0.0', 8000);
+require_once
+    // Create a new Swoole HTTP server
+    $http = new Swoole\Http\Server('0.0.0.0', 8000);
 
 // Handle incoming requests
 $http->on('request', function (Request $request, Response $response) use ($app) {

@@ -2,7 +2,7 @@
 
 use App\Controllers\IndexController;
 
-$routeProcessor = new \Main\Engine\RouteProcessor(ROOT_DIR . '/routes/web.php');
+$routeProcessor = new \Main\Engine\RouteProcessor(__DIR__ . '/../routes/web.php');
 
 return [
     '/' => ['GET', IndexController::class, 'index'],
