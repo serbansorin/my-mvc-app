@@ -4,7 +4,7 @@ namespace Main;
 
 use Swoole\Http\Request;
 use Swoole\Http\Response;
-use Main\HttpRouting;
+use Main\Engine\HttpRouting;
 
 /**
  * Route class used to handle the request and route it to the appropriate controller
@@ -168,7 +168,7 @@ class Route extends HttpRouting
         $request = $app->get('request');
         $response = $app->get('response');
 
-        self::handleRequest($request, $response);
+        self::handleRequest($app, $request, $response);
     }
 
     /**

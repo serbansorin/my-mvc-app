@@ -1,23 +1,28 @@
 <?php
 
-namespace Src;
+namespace Main;
+
+use \Main\Engine\TemplateEngine;
 
 class View
 {
-    private $viewFile;
-    private $data;
+    private static $templateEngine;
 
-    public function __construct($viewFile, $data = [])
+    public static function initialize($templateDir)
     {
-        $this->viewFile = $viewFile;
-        $this->data = $data;
+        self::$templateEngine = new TemplateEngine($templateDir);
     }
 
-    public function render()
+    public static function render($template, $data = [])
     {
-        ob_start();
-        extract($this->data);
-        include $this->viewFile;
-        return ob_get_clean();
+        if (!self::$templateEngine) {
+            throw new \Exception("View class has not been initialized. Call View::initialize() first.");
+        }
+        return self::$templateEngine->render($template, $data);
+    }
+
+    public function __invoke()
+    {
+        \Main\View::initialize(ROOT_DIR . '/app/views');
     }
 }

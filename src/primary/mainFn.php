@@ -1,10 +1,11 @@
 <?php
 
-
+use Hyperf\Database\Model\Model;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
-use Illuminate\Http\Request as IlluminateRequest;
-use Illuminate\Http\Response as IlluminateResponse;
+// use Illuminate\Http\Request as IlluminateRequest;
+// use Illuminate\Http\Response as IlluminateResponse;
+
 
 
 function app(string $key = null)
@@ -42,10 +43,19 @@ function response(): Response
  * @param Request $swooleRequest
  * @return IlluminateRequest
  */
-function convertToIlluminateRequest(Request $swooleRequest): IlluminateRequest
-{
-    // Implement your conversion logic here
-}
+// function convertToIlluminateRequest(Request $swooleRequest): IlluminateRequest
+// {
+//     $tmpRequest = new IlluminateRequest(
+//         $swooleRequest->get ?? [],
+//         $swooleRequest->post ?? [],
+//         [],
+//         $swooleRequest->cookie ?? [],
+//         $swooleRequest->files ?? [],
+//         $swooleRequest->server ?? [],
+//         $swooleRequest->rawContent()
+//     );
+//     return $tmpRequest;
+// }
 
 /**
  * Convert Swoole response to Illuminate response.
@@ -53,63 +63,64 @@ function convertToIlluminateRequest(Request $swooleRequest): IlluminateRequest
  * @param Response $swooleResponse
  * @return IlluminateResponse
  */
-function convertToIlluminateResponse(Response $swooleResponse): IlluminateResponse
-{
-    // Implement your conversion logic here
-}
+// function convertToIlluminateResponse(Response $swooleResponse): IlluminateResponse
+// {
+//     // Implement your conversion logic here
+// }
 
 /**
  * Get the current user.
  *
  * @return User|null
  */
-function user(): ?User
+function user(): ?App\Models\User
 {
     // Implement your logic to retrieve the current user here
+    return null;
 }
 
-/**
- * Check if the current user is authenticated.
- *
- * @return bool
- */
-function auth(): bool
-{
-    // Implement your logic to check if the user is authenticated here
-}
+// /**
+//  * Check if the current user is authenticated.
+//  *
+//  * @return bool
+//  */
+// function auth(): bool
+// {
+//     // Implement your logic to check if the user is authenticated here
+// }
 
-/**
- * Generate a random string.
- *
- * @param int $length
- * @return string
- */
-function generateRandomString(int $length): string
-{
-    // Implement your logic to generate a random string here
-}
+// /**
+//  * Generate a random string.
+//  *
+//  * @param int $length
+//  * @return string
+//  */
+// function generateRandomString(int $length): string
+// {
+//     // Implement your logic to generate a random string here
+// }
 
-/**
- * Encrypt the given value.
- *
- * @param string $value
- * @return string
- */
-function encrypt(string $value): string
-{
-    // Implement your logic to encrypt the value here
-}
+// /**
+//  * Encrypt the given value.
+//  *
+//  * @param string $value
+//  * @return string
+//  */
+// function encrypt(string $value): string
+// {
+//     // Implement your logic to encrypt the value here
+// }
 
-/**
- * Decrypt the given value.
- *
- * @param string $value
- * @return string
- */
-function decrypt(string $value): string
-{
-    // Implement your logic to decrypt the value here
-}
+// /**
+//  * Decrypt the given value.
+//  *
+//  * @param string $value
+//  * @return string
+//  */
+// function decrypt(string $value): string
+// {
+//     // Implement your logic to decrypt the value here
+// }
 
 /**
  * Get the current timestamp.

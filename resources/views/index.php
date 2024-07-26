@@ -1,10 +1,22 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>My MVC App</title>
+    <title>{{ $title }}</title>
 </head>
+
 <body>
-    <h1>Welcome to My MVC App</h1>
-    <p>This is the index page.</p>
+    <h1>{{ $heading }}</h1>
+
+    @if($showList)
+    <ul>
+        @foreach($items as $item)
+        <li>{{ $item }}</li>
+        @endforeach
+    </ul>
+    @else
+    <p>No items to display.</p>
+    @endif
 </body>
+
 </html>

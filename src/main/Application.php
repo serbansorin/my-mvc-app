@@ -18,26 +18,28 @@ class Application
      * Application constructor.
      * Initializes the container with default services.
      */
-    private function __construct()
+    private function __construct(...$data)
     {
-        // $this->container['request'] = new Request();
-        // $this->container['response'] = new Response();
-        $this->container = require __DIR__ . '/../config/services.php';
-        $this->processContainer();
+        if (file_exists(CONFIG_DIR . '/services.php')) {
+            $tmpContainer = require CONFIG_DIR . '/services.php';
+            $this->processContainer($tmpContainer);
+        }
     }
 
     /**
      * Processes the container by resolving callable services.
      */
-    private function processContainer()
+    private function processContainer($container)
     {
-        foreach ($this->container as $key => $value) {
-
-            if (is_string($value) && class_exists($value)) {
-                $this->container[$key] = new $value();
-            } else
-            if (is_callable($value)) {
-                $this->container[$key] = $value($this);
+        foreach ($container as $key => $value) {
+            if (is_object($value)) {
+                $this->storeInContainer($key, $value);
+            } elseif (is_callable($value) && method_exists($value, '__invoke')) {
+                $this->storeInContainer($key, $value($this));
+            } elseif (is_string($value) && class_exists($value)) {
+                $this->storeInContainer($key, new $value());
+            } else {
+                throw new \ErrorException("Invalid service: $value", 1);
             }
         }
     }
@@ -74,6 +76,9 @@ class Application
      */
     public function set($key, $value = null)
     {
+        $key = strtolower($key);
+
+        // If the value is empty, try to instantiate a class with the same name
         if (empty($value)) {
             $tmp = ucfirst($key);
 
@@ -82,22 +87,35 @@ class Application
             } else if (class_exists('Main\\' . $tmp)) {
                 $value = 'Main\\' . $tmp;
             }
-
-            if (class_exists($value)) {
-                $value = new $value();
-            }
         }
-
+        // If the value is an object, store it in the container
         if (is_object($value)) {
             $this->storeInContainer($key, $value);
-        } elseif (is_callable($value)) {
-            $value = $value($this);
+
+            // If the value is a callable, invoke it
+        } elseif (is_callable($value) && method_exists($value, '__invoke')) {
+            $this->storeInContainer($key, $value($this));
+
+            // If the value is a string and the class exists, instantiate it
+        } elseif (is_string($value) && class_exists($value)) {
+            $this->storeInContainer($key, new $value());
+
+            // Otherwise, throw an exception
+        } else {
+            throw new \ErrorException("Invalid service: $value", 1);
         }
     }
 
     private function storeInContainer($key, $value)
     {
         self::$instance->container[strtolower($key)] = $value;
+    }
+
+    public function singleton($key, $value)
+    {
+        if (!isset(self::$singleton[$key])) {
+            self::$singleton[$key] = $value;
+        }
     }
 
     /**
@@ -129,7 +147,7 @@ class Application
      */
     public function __get($key)
     {
-        return $this->get($key);
+        return $this->get(mb_strtolower($key));
     }
 
     /**
