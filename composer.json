@@ -1,16 +1,17 @@
 {
     "name": "sorinserban/mvc-way",
-    "description": "MVC Framework made to work",
+    "description": "MVC Framework based on Swoole with performance in mind",
     "type": "project",
     "require-dev": {
         "ext-swoole": "^5.1",
         "swoole/ide-helper": "dev-master",
         "hyperf/guzzle": "3.1.x-dev",
-        "hyperf": "\u001b\u001b",
         "hyperf/database": "3.1.x-dev",
         "hyperf/logger": "3.1.x-dev"
     },
-    "license": "llm",
+    "license": [
+        "MIT"
+    ],
     "authors": [
         {
             "name": "Sorin S",
@@ -18,5 +19,20 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {}
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Main\\": "src/main/"
+        },
+        "files": [
+            "src/primary/mainFn.php"
+        ],
+        "classmap": [
+            "src/primary"
+        ],
+        "exclude-from-classmap": [
+            "src/primary/mainFn.php"
+        ]
+    }
 }

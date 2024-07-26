@@ -1,15 +1,17 @@
+<?php
+
+
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 use Illuminate\Http\Request as IlluminateRequest;
 use Illuminate\Http\Response as IlluminateResponse;
 
-<?php
 
 function app(string $key = null)
 {
     // Implement your logic to get the application instance here
 
-    $app = \Src\Application::getInstance();
+    $app = \Main\Application::getInstance();
 
     return $key ? $app->get($key) : $app;
 }
