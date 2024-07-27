@@ -6,6 +6,7 @@ use Swoole\Http\Request;
 use Swoole\Http\Response;
 use Main\Engine\HttpRouting;
 use Main\Engine\RouteProcessor;
+use Main\Accessors\RouteGroup;
 
 /**
  * Route class used to handle the request and route it to the appropriate controller
@@ -14,7 +15,7 @@ use Main\Engine\RouteProcessor;
  */
 class Route extends HttpRouting
 {
-    public RouteGroup $group;
+    public \Main\Accessors\RouteGroup $group;
     public RouteProcessor $process;
 
     private static $instance;

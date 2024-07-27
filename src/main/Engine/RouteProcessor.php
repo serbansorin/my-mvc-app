@@ -57,6 +57,7 @@ class RouteProcessor
     private function processRoutes()
     {
         $methods = ['get', 'post', 'put', 'delete', 'patch', 'options', 'any'];
+
         foreach ($this->routes as $path => $route) {
             $middleware = $route['middleware'] ?? $route[2] ?? null;
             $method = strtolower($route['method'] ?? $route[0]) ?? 'get';
