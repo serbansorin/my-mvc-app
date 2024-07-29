@@ -13,8 +13,9 @@ class RouteProcessor
     public function __construct($routeArray = null, $addDirectly = false)
     {
         if (is_null($routeArray)) {
-            return $this;
+            return;
         }
+        
         $routeArray = $this->validateAndGetArray($routeArray);
 
         $this->bindDirectly = $addDirectly;

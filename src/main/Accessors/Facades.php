@@ -2,8 +2,18 @@
 
 namespace Main\Accessors;
 
-class Facades
+
+abstract class Facades
 {
+    public function __construct()
+    {
+        //
+    }
+    public function __get($key)
+    {
+        return app()->get($key);
+    }
+    
     public static function getFacadeAccessor()
     {
         return 'make';
@@ -16,8 +26,4 @@ class Facades
         return $instance->$method(...$args);
     }
 
-    public static function getClassName()
-    {
-        return get_called_class();
-    }
 }

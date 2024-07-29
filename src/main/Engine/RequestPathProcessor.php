@@ -5,14 +5,14 @@ namespace Main\Engine;
 use Main\Route;
 
 /**
- * Class HttpRouting
+ * Class RequestPathProcessor
  * 
  * This class represents the HTTP routing functionality of the application.
  */
-class HttpRouting
+class RequestPathProcessor
 {
 
-    const METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'ANY'];
+    const HTTP_METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'ANY'];
 
     /**
      * Magic method to handle dynamic method calls for adding routes.
@@ -25,7 +25,7 @@ class HttpRouting
     public function __call($name, $arguments)
     {
         if (static::processKnownMethods($name, $arguments)) {
-            return static::getInstance();
+            static::getInstance();
         }
     }
 
@@ -40,13 +40,13 @@ class HttpRouting
     public static function __callStatic($name, $arguments)
     {
         if (static::processKnownMethods($name, $arguments)) {
-            return static::getInstance();
+            static::getInstance();
         }
     }
 
     private static function processKnownMethods($name, $arguments): bool
     {
-        if (in_array(strtoupper($name), self::METHODS)) {
+        if (in_array(strtoupper($name), self::HTTP_METHODS)) {
             array_unshift($arguments, strtoupper($name));
             call_user_func_array([static::getInstance(), 'addRoute'], $arguments);
         } else {
@@ -57,31 +57,42 @@ class HttpRouting
     }
 
     /**
-     * Get the instance of the HttpRouting class.
+     * Get the instance of the RequestPathProcessor class.
      *
-     * @return HttpRouting The HttpRouting instance.
+     * @return RequestPathProcessor The RequestPathProcessor instance.
      */
     public static function getInstance()
     {
-        return new self();
+        return new static;
     }
 
+
     /**
-     * Add a route to the routing table.
-     *
-     * @param string $method The HTTP method for the route.
-     * @param string $path The URL path for the route.
-     * @param string $controller The controller class for the route.
-     * @param string $action The action method for the route.
-     * @return void
+     * Get array from string ex: "Controller@action"
+     * @param string $str
      */
-    public function addRoute($method, $path, $controller, $action)
+    public function getMethodActionFromString(string $str): array
     {
-        Route::$routes[$path] = [
-            'method' => $method,
-            'controller' => $controller,
+        $controllerAction = explode('@', $str);
+        $controller = $controllerAction[0];
+        $action = $controllerAction[1] ?? 'index';
+
+        return [
+            'method' => $controller,
             'action' => $action
         ];
+    }
+
+    public function getVarsFromPath($path)
+    {
+        $path = explode('/', $path);
+        $vars = [];
+        foreach ($path as $key => $value) {
+            if ($key % 2 == 0) {
+                $vars[$value] = $path[$key + 1];
+            }
+        }
+        return $vars;
     }
 
     protected function getRoute($path)

@@ -70,11 +70,8 @@ class Application
 
     /**
      * Sets a service in the container.
-     *
-     * @param string $key The key of the service.
-     * @param \ApplicationInterface|null $value The value of the service.
      */
-    public function set($key, $value = null)
+    public function set(string $key, string|object|null $value = null)
     {
         $key = strtolower($key);
 
@@ -139,6 +136,21 @@ class Application
         unset($this->container[strtolower($key)]);
     }
 
+    public function make($newApp)
+    {
+        $classname = get_class($newApp);
+        if (!class_exists($classname)) {
+            throw new \ErrorException("
+                Class $classname does not exist.
+            ", 1);
+        }
+
+        self::$instance->container[strtolower($classname)] = $newApp;
+        self::singleton($classname, new $classname);
+
+        return self::$singleton[$classname];
+    }
+
     /**
      * Magic method to retrieve a service from the container.
      *
@@ -154,7 +166,7 @@ class Application
      * Magic method to set a service in the container.
      *
      * @param string $key The key of the service.
-     * @param \ApplicationInterface $value The value of the service.
+     * @param $value The value of the service.
      */
     public function __set($key, $value)
     {

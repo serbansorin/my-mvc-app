@@ -3,6 +3,7 @@
 use Hyperf\Database\Model\Model;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
+
 // use Illuminate\Http\Request as IlluminateRequest;
 // use Illuminate\Http\Response as IlluminateResponse;
 
@@ -317,4 +318,65 @@ function isEqual($value1, $value2): bool
 function isIdentical($value1, $value2): bool
 {
     return $value1 === $value2;
+}
+
+/**
+ * Pluralize: get the plural form of a word.
+ * @param string $word
+ * @return string
+ */
+function pluralize(string $word): string
+{
+    $irregulars = [
+        'child' => 'children',
+        'goose' => 'geese',
+        'man' => 'men',
+        'woman' => 'women',
+        'tooth' => 'teeth',
+        'foot' => 'feet',
+    ];
+
+    if (array_key_exists(strtolower($word), $irregulars)) {
+        return $irregulars[strtolower($word)];
+    }
+
+    $lastLetter = substr($word, -1);
+    if ($lastLetter === 'y') {
+        return substr($word, 0, -1) . 'ies';
+    } elseif (in_array($lastLetter, ['s', 'x', 'z']) || substr($word, -2) === 'ch' || substr($word, -2) === 'sh') {
+        return $word . 'es';
+    } else {
+        return $word . 's';
+    }
+}
+
+function singularize(string $word): string
+{
+    $irregulars = [
+        'children' => 'child',
+        'geese' => 'goose',
+        'men' => 'man',
+        'women' => 'woman',
+        'teeth' => 'tooth',
+        'feet' => 'foot',
+    ];
+
+    if (array_key_exists(strtolower($word), $irregulars)) {
+        return $irregulars[strtolower($word)];
+    }
+
+    if (substr($word, -3) === 'ies') {
+        return substr($word, 0, -3) . 'y';
+    } elseif (substr($word, -2) === 'es') {
+        $base = substr($word, 0, -2);
+        if (in_array(substr($base, -1), ['s', 'x', 'z']) || substr($base, -2) === 'ch' || substr($base, -2) === 'sh') {
+            return $base;
+        }
+    }
+
+    if (substr($word, -1) === 's' && substr($word, -2) !== 'ss') {
+        return substr($word, 0, -1);
+    }
+
+    return $word;
 }

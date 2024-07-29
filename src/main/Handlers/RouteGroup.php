@@ -2,29 +2,28 @@
 
 namespace Main\Accessors;
 
-use \Main\Engine\HttpRouting;
+use \Main\Engine\RequestPathProcessor;
 
 class RouteGroup
 {
     private $prefix;
-    private HttpRouting $httpRouting;
-    private \Main\Route $route;
+    private RequestPathProcessor $rtProc;
+    private $routes = [];
 
     public function __construct($prefix, $callback)
     {
         $this->prefix = $prefix;
-        $this->httpRouting = HttpRouting::getInstance();
     }
 
     public function addRoute($method, $path, $controller, $action)
     {
         $fullPath = $this->prefix . $path;
-        $this->httpRouting->addRoute($method, $fullPath, $controller, $action);
+        $this->rtProc->addRoute($method, $fullPath, $controller, $action);
     }
 
     public function getRoutes()
     {
-        return $this->httpRouting->getRoutes();
+        return $this->rtProc->getRoutes();
     }
 
     private function addPrefixToRoute($routes)

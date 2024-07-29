@@ -1,38 +1,38 @@
 {
-    "name": "sorinserban/mvc-way",
-    "description": "MVC Framework based on Swoole with performance in mind",
-    "type": "project",
-    "require-dev": {
-        "ext-swoole": "^5.1",
-        "swoole/ide-helper": "dev-master",
-        "hyperf/guzzle": "3.1.x-dev",
-        "hyperf/database": "3.1.x-dev",
-        "hyperf/logger": "3.1.x-dev"
-    },
-    "license": [
-        "MIT"
-    ],
     "authors": [
         {
-            "name": "Sorin S",
-            "email": "serbansorin1@outlook.com"
+            "email": "serbansorin1@outlook.com",
+            "name": "Sorin S"
         }
     ],
-    "minimum-stability": "dev",
-    "require": {},
     "autoload": {
-        "psr-4": {
-            "App\\": "app/",
-            "Main\\": "src/main/"
-        },
-        "files": [
-            "src/primary/mainFn.php"
-        ],
         "classmap": [
             "src/primary"
         ],
         "exclude-from-classmap": [
             "src/primary/mainFn.php"
-        ]
-    }
+        ],
+        "files": [
+            "src/primary/mainFn.php"
+        ],
+        "psr-4": {
+            "App\\": "app/",
+            "Main\\": "src/main/"
+        }
+    },
+    "description": "MVC Framework based on Swoole with performance in mind",
+    "license": [
+        "MIT"
+    ],
+    "minimum-stability": "dev",
+    "name": "sorinserban/mvc-way",
+    "require": {},
+    "require-dev": {
+        "ext-swoole": "^5.1",
+        "hyperf/database": "3.1.x-dev",
+        "hyperf/guzzle": "3.1.x-dev",
+        "hyperf/logger": "3.1.x-dev",
+        "swoole/ide-helper": "dev-master"
+    },
+    "type": "project"
 }
