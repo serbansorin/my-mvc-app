@@ -4,6 +4,9 @@ namespace Main\Handlers;
 
 class CommandHandler
 {
+	// TODO make this file and move the make commands to a separate handler
+	// private MakeCommandHandler $makeHandler;
+
 	public function handle($argv)
 	{
 		if (count($argv) < 2) {
@@ -11,22 +14,11 @@ class CommandHandler
 			return;
 		}
 
-		$command = $argv[1];
-		switch ($command) {
-			case 'app:start':
-				$this->startServer();
-				break;
-			case 'app:make':
-				if (isset($argv[2])) {
-					$this->makeComponent($argv[2], $argv[3] ?? null);
-				} else {
-					$this->showHelp();
-				}
-				break;
-			default:
-				$this->showHelp();
-				break;
-		}
+		return match ($argv[1]) {
+			'app:start' => $this->startServer(),
+			'app:make' => $this->makeComponent($argv[2], $argv[3]),
+			default => $this->showHelp(),
+		};
 	}
 
 	private function startServer()

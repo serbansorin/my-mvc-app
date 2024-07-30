@@ -59,4 +59,18 @@ class Bootstrap
     {
         return $this->config->getAllConfig();
     }
+
+    private function isStaticAndExists($name)
+    {
+        return property_exists(self::class, $name) && is_object(self::$name);
+    }
+
+    public function __get($name)
+    {
+        if ($this->isStaticAndExists($name)) {
+            return self::$name;
+        }
+
+        return null;
+    }
 }

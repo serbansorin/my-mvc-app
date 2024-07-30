@@ -1,6 +1,6 @@
 <?php
 
-use \Main\Application;
+use Kernel\Application;
 
 class Facades
 {

@@ -2,7 +2,7 @@
 require_once __DIR__ . '/vendor/autoload.php';
 
 // Load the kernel file
-[$route, $app] = require_once ROOT_DIR . '/boot/kernel.php';
+[$route, $app] = require_once ROOT_DIR . '/boot/bootstrap.php';
 
 use Swoole\Http\Request;
 use Swoole\Http\Response;

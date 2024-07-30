@@ -8,8 +8,8 @@ if ($bootstrapLoaded) {
     return [$route, $app, $bootstrap];
 }
 
-$app = \Kernel\Application::getInstance();
 $bootstrap = \Kernel\Bootstrap::init();
+$app = $bootstrap->$app;
 
 $services = [
     // 'config' => \Kernel\Config::class,

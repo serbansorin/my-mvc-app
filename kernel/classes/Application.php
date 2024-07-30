@@ -87,7 +87,7 @@ class Application
             // else if class extends Facades class
             else {
                 // get all files in Facades directory
-                $files = scandir(ROOT_DIR . '/src/primary/Facades');
+                $files = scandir(ROOT_DIR . '/src/globals/Facades');
 
                 // check if file exists
                 $fileN = array_filter($files, function ($file) use ($tmp) {
@@ -97,7 +97,7 @@ class Application
                 if (!isset($fileN)) { // if file not found
                     throw new \ErrorException("Invalid service: $value", 1);
                 } else {
-                    $value = require ROOT_DIR . '/src/primary/Facades/' . $fileN;
+                    $value = require ROOT_DIR . '/src/globals/Facades/' . $fileN;
                 }
 
                 $this->storeInContainer($key, $value);

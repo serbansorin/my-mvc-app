@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../boot/kernel.php';
+require_once __DIR__ . '/../kernel/bootstrap.php';
 
 
 
