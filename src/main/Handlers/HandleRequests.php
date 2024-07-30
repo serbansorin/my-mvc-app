@@ -3,9 +3,10 @@
 namespace Main\Handlers;
 
 use Main\Application;
-use Main\Config;
+use Kernel\Config;
 use Main\Route;
 use Primary\Facades\RequestFacade;
+use Main\Engine\RouteProcessor;
 
 class HandleRequests
 {
@@ -15,7 +16,7 @@ class HandleRequests
     public function __construct()
     {
         $this->config = new Config();
-        $this->routeProcessor = new RouteProcessor($this->config->get('routes'));
+        $this->routeProcessor = new RouteProcessor($this->config->getConfig('routes')['web']['main']);
     }
 
 

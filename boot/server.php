@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 
-// Load the bootstrap file and get route and app instances
-list($route, $app) = require_once __DIR__ . '/kernel/bootstrap.php';
+// Load the kernel file
+[$route, $app] = require_once ROOT_DIR . '/boot/kernel.php';
 
 use Swoole\Http\Request;
 use Swoole\Http\Response;

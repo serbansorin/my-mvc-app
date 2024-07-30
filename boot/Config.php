@@ -1,5 +1,7 @@
 <?php
 
+namespace Kernel;
+
 class Config
 {
     private array $configFiles;

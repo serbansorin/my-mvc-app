@@ -13,6 +13,7 @@ return [
         ],
         'routesFiles' => [
             ROOT_DIR . 'routes/web.php',
-        ]
+        ],
+        'main' => ROOT_DIR . 'routes/web.php',
     ],
 ];

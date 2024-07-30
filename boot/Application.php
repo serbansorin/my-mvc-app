@@ -1,6 +1,6 @@
 <?php
 
-namespace Main;
+namespace Kernel;
 
 use Swoole\Http\Request;
 use Swoole\Http\Response;
@@ -13,7 +13,7 @@ class Application
     private static $instance;
     private $container = [];
     public static $singleton = [];
-    private static \Config $config;
+    private static Config $config;
 
     /**
      * Application constructor.
@@ -58,11 +58,6 @@ class Application
         return self::$instance;
     }
 
-    public function loadServices($array)
-    {
-        $this->processContainer($array);
-    }
-
     /**
      * Retrieves a service from the container by its key.
      *
@@ -84,13 +79,32 @@ class Application
         // If the value is empty, try to instantiate a class with the same name
         if (empty($value)) {
             $tmp = ucfirst($key);
+            if (class_exists("App\\$tmp")) {
+                $value = "App\\$tmp";
+            } elseif (class_exists("Main\\$tmp")) {
+                $value = "Main\\$tmp";
+            }
+            // else if class extends Facades class
+            else {
+                // get all files in Facades directory
+                $files = scandir(ROOT_DIR . '/src/primary/Facades');
 
-            if (class_exists('App\\' . $tmp)) {
-                $value = 'App\\' . $tmp;
-            } else if (class_exists('Main\\' . $tmp)) {
-                $value = 'Main\\' . $tmp;
+                // check if file exists
+                $fileN = array_filter($files, function ($file) use ($tmp) {
+                    return $file === $tmp . '.php' || $file === $tmp . 'Facade.php';
+                })[0] ?? null;
+
+                if (!isset($fileN)) { // if file not found
+                    throw new \ErrorException("Invalid service: $value", 1);
+                } else {
+                    $value = require ROOT_DIR . '/src/primary/Facades/' . $fileN;
+                }
+
+                $this->storeInContainer($key, $value);
+                return;
             }
         }
+
         // If the value is an object, store it in the container
         if (is_object($value)) {
             $this->storeInContainer($key, $value);
@@ -103,15 +117,46 @@ class Application
         } elseif (is_string($value) && class_exists($value)) {
             $this->storeInContainer($key, new $value());
 
-            // Otherwise, throw an exception
         } else {
             throw new \ErrorException("Invalid service: $value", 1);
         }
     }
 
+    /**
+     * Stores a service in the container.
+     *
+     * @param string $key The key of the service.
+     * @param mixed $value The value of the service.
+     */
     private function storeInContainer($key, $value)
     {
         self::$instance->container[strtolower($key)] = $value;
+    }
+
+    /**
+     * Stores services in the container.
+     * @param mixed $array
+     * @throws \ErrorException
+     * @return void
+     */
+    public function storeServices($array)
+    {
+        foreach ($array as $key => $value) {
+            // If the value is an object, store it in the container
+            if (is_object($value)) {
+                $this->storeInContainer($key, $value);
+            }
+            // If the value is a callable, invoke it
+            elseif (is_callable($value) && method_exists($value, '__invoke')) {
+                $this->storeInContainer($key, $value($this));
+            }
+            // If the value is a string and the class exists, instantiate it 
+            elseif (is_string($value) && class_exists($value) && is_subclass_of($value, '\\Facades')) {
+                $this->storeInContainer($key, new $value());
+            } else {
+                throw new \ErrorException("Invalid service: $value", 1);
+            }
+        }
     }
 
     public function singleton($key, $value)
@@ -215,15 +260,15 @@ class Application
      * Load the configuration data from the config file
      * @param mixed $dir
      */
-    public function loadConfig($dir = CONFIG_DIR): \Config
+    public function loadConfig($dir = CONFIG_DIR): Config
     {
-        self::$config = new \Config($dir);
+        self::$config = new Config($dir);
         return self::$config;
     }
 
     public static function setConfig($dir = CONFIG_DIR)
     {
-        self::$config = new \Config($dir);
+        self::$config = new Config($dir);
     }
 
     /**
@@ -238,8 +283,8 @@ class Application
 
     public static function getAllConfig($dir = CONFIG_DIR): array
     {
-        return self::$config?->getAllConfig() 
-            ?? (new \Config())->getAllConfig();
+        return self::$config?->getAllConfig()
+            ?? (new Config())->getAllConfig();
     }
 
 }
