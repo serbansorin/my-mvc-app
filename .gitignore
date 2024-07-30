@@ -1,5 +1,21 @@
+
+**/.DS_Store
+**/.git
+.DS_Store
+
 .vscode
 /vendor
 /node_modules
-/public
 
+!/public/,gitignore
+!/public/index.php
+
+/public/*
+
+# Ignore all files named .DS_Store
+**/.DS_Store
+/*.DS_Store
+
+**/.DS_Store
+.DS_Store
+src/.DS_Store

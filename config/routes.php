@@ -1,9 +1,18 @@
 <?php
 
-use App\Controllers\IndexController;
-
-$routeProcessor = new \Main\Engine\RouteProcessor(ROOT_DIR . '/routes/web.php');
-
 return [
-    '/' => ['GET', IndexController::class, 'index'],
+    'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+    ],
+    'web' => [
+        'middlewareFiles' => [
+            ROOT_DIR . 'middleware/AuthMiddleware.php',
+        ],
+        'routesFiles' => [
+            ROOT_DIR . 'routes/web.php',
+        ]
+    ],
 ];

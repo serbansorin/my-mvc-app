@@ -1,0 +1,10 @@
+# Ignore all files
+
+# ignore all directories
+
+# Except .gitignore
+!.gitignore
+!index.php
+# Except index.php
+
+**/.DS_Store

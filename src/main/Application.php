@@ -13,6 +13,7 @@ class Application
     private static $instance;
     private $container = [];
     public static $singleton = [];
+    private static \Config $config;
 
     /**
      * Application constructor.
@@ -55,6 +56,11 @@ class Application
             self::$instance = new self();
         }
         return self::$instance;
+    }
+
+    public function loadServices($array)
+    {
+        $this->processContainer($array);
     }
 
     /**
@@ -204,4 +210,36 @@ class Application
     {
         $vars = func_get_args();
     }
+
+    /**
+     * Load the configuration data from the config file
+     * @param mixed $dir
+     */
+    public function loadConfig($dir = CONFIG_DIR): \Config
+    {
+        self::$config = new \Config($dir);
+        return self::$config;
+    }
+
+    public static function setConfig($dir = CONFIG_DIR)
+    {
+        self::$config = new \Config($dir);
+    }
+
+    /**
+     * Get the configuration data from config file
+     * @param mixed $file
+     * @return mixed
+     */
+    public function getConfig($file)
+    {
+        return self::$config->getConfig($file);
+    }
+
+    public static function getAllConfig($dir = CONFIG_DIR): array
+    {
+        return self::$config?->getAllConfig() 
+            ?? (new \Config())->getAllConfig();
+    }
+
 }

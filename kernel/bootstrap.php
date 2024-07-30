@@ -1,17 +1,27 @@
 <?php
 
-use Main\Application;
-use App\Controllers\IndexController;
+$bootstrapLoaded = false;
 
-$routeProcessor = (new \Main\Engine\RouteProcessor(__DIR__ . '/../routes/web.php'))->getRoutes();
-$route = Main\Route::getInstance();
+if ($bootstrapLoaded) {
+    return [$route, $app, $bootstrap];
+}
 
-// Initialize the application instance
-$app = Application::getInstance();
+use Kernel\Boot as Bootstrap;
 
-// Register services
+const ROOT_DIR = dirname(__DIR__);
+const APP_DIR = ROOT_DIR . '/app';
+const CONFIG_DIR = ROOT_DIR . '/config';
+const PUBLIC_DIR = ROOT_DIR . '/public';
+const RESOURCES_DIR = ROOT_DIR . '/resources';
 
-$app->set('view', Main\View::initialize(ROOT_DIR . '/resources/views'));
+Bootstrap::init();
 
-// Add other services as needed
-// $app->set('serviceName', new ServiceClass());
+$bootstrap = Bootstrap::getInstance();
+list($route, $app) = $bootstrap->boot();
+
+$app->loadServices([
+    'router' => $route,
+]);
+
+$bootstrapLoaded = true;
+return [$route, $app];
