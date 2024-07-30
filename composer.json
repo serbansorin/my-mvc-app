@@ -10,10 +10,10 @@
             "src/primary"
         ],
         "exclude-from-classmap": [
-            "src/primary/mainFn.php"
+            "src/primary/Helpers/functions.php"
         ],
         "files": [
-            "src/primary/mainFn.php"
+            "src/primary/Helpers/functions.php"
         ],
         "psr-4": {
             "App\\": "app/",
