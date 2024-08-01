@@ -2,20 +2,20 @@
 namespace Kernel;
 
 use Main\Engine\RouteProcessor;
-use Main\Route;
+use Main\Router;
 
 class Bootstrap
 {
     private static $instance = null;
     public static Config $config;
     public static Application $app;
-    public static Route $router;
+    public static Router $router;
     public static RouteProcessor $routeProcessor;
 
     public static array $services = [
         'config' => Config::class,
         'app' => Application::class,
-        'router' => Route::class,
+        'router' => Router::class,
         'routeProcessor' => RouteProcessor::class
     ];
 

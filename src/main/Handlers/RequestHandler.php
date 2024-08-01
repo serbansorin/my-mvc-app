@@ -2,13 +2,12 @@
 
 namespace Main\Handlers;
 
-use Main\Application;
-use Kernel\Config;
-use Main\Route;
-use Primary\Facades\RequestFacade;
-use Main\Engine\RouteProcessor;
+use Kernel\Application;
+use Main\Config;
+use Main\Router;
+use Request;
 
-class HandleRequests
+class RequestHandler
 {
     private $routeProcessor;
     private $config;
@@ -16,7 +15,7 @@ class HandleRequests
     public function __construct()
     {
         $this->config = new Config();
-        $this->routeProcessor = new RouteProcessor($this->config->getConfig('routes')['web']['main']);
+        $this->routeProcessor = new RouteProcessor($this->config->get('routes'));
     }
 
 
@@ -30,7 +29,7 @@ class HandleRequests
     public static function handleRequest(Application $app, Request $request, Response $response)
     {
         if (!self::$instance) {
-            self::$instance = new Route();
+            self::$instance = new Router();
             RequestFacade::setFacadeApplication($app);
         }
 

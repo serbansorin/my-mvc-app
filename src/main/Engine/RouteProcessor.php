@@ -2,7 +2,7 @@
 
 namespace Main\Engine;
 
-use Main\Route;
+use Main\Router;
 
 class RouteProcessor
 {
@@ -77,7 +77,7 @@ class RouteProcessor
     private function addRoute($method, $path, $controller, $action, $middleware = null)
     {
         if ($this->bindDirectly) {
-            Route::$routes[$path] = [
+            Router::$routes[$path] = [
                 'method' => strtoupper($method),
                 'controller' => $controller,
                 'action' => $action,
@@ -96,7 +96,7 @@ class RouteProcessor
 
     public function mergeNewRoutes()
     {
-        array_merge_recursive(Route::$routes, self::$newRoutes);
+        array_merge_recursive(Router::$routes, self::$newRoutes);
     }
 
     public function getRoutes()
@@ -122,7 +122,7 @@ class RouteProcessor
 
     public function cleanOldRoutes()
     {
-        Route::$routes = [];
+        Router::$routes = [];
     }
 
     public function cleanAll()

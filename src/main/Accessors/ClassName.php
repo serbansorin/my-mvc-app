@@ -5,7 +5,7 @@ namespace Main\Accessors;
 
 class ClassName
 {
-    use \NameTrait;
+    use \StringManipulationTrait;
 
     private $name;
     private $props;

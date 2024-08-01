@@ -13,7 +13,7 @@ function app(string $key = null)
 {
     // Implement your logic to get the application instance here
 
-    $app = \Main\Application::getInstance();
+    $app = \Kernel\Application::getInstance();
 
     return $key ? $app->get($key) : $app;
 }

@@ -2,12 +2,12 @@
 
 namespace Main\Accessors;
 
-use \Main\Engine\RequestPathProcessor;
+use \Main\Engine\HttpMethodProcessor;
 
 class RouteGroup
 {
     private $prefix;
-    private RequestPathProcessor $rtProc;
+    private HttpMethodProcessor $rtProc;
     private $routes = [];
 
     public function __construct($prefix, $callback)
@@ -35,6 +35,6 @@ class RouteGroup
             $prefixedRoutes[$prefix . $path] = $route;
         }
 
-        return \Main\Route::getInstance()->bindNewRoutes($prefixedRoutes);
+        return \Main\Router::getInstance()->bindNewRoutes($prefixedRoutes);
     }
 }

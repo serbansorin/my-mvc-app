@@ -2,14 +2,14 @@
 
 namespace Main\Engine;
 
-use Main\Route;
+use Main\Router;
 
 /**
- * Class RequestPathProcessor
+ * Class HttpMethodProcessor
  * 
  * This class represents the HTTP routing functionality of the application.
  */
-class RequestPathProcessor
+class HttpMethodProcessor
 {
 
     const HTTP_METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'ANY'];
@@ -56,34 +56,8 @@ class RequestPathProcessor
         return true;
     }
 
-    /**
-     * Get the instance of the RequestPathProcessor class.
-     *
-     * @return RequestPathProcessor The RequestPathProcessor instance.
-     */
-    public static function getInstance()
-    {
-        return new static;
-    }
 
-
-    /**
-     * Get array from string ex: "Controller@action"
-     * @param string $str
-     */
-    public function getMethodActionFromString(string $str): array
-    {
-        $controllerAction = explode('@', $str);
-        $controller = $controllerAction[0];
-        $action = $controllerAction[1] ?? 'index';
-
-        return [
-            'method' => $controller,
-            'action' => $action
-        ];
-    }
-
-    public function getVarsFromPath($path)
+    public function getVarsFromPath($path): array
     {
         $path = explode('/', $path);
         $vars = [];
@@ -97,7 +71,7 @@ class RequestPathProcessor
 
     protected function getRoute($path)
     {
-        return Route::$routes[$path];
+        return Router::$routes[$path];
     }
 
     /**
@@ -107,6 +81,6 @@ class RequestPathProcessor
      */
     protected function getRoutes()
     {
-        return Route::$routes;
+        return Router::$routes;
     }
 }
