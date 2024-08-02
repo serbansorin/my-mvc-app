@@ -2,20 +2,30 @@
 
 namespace Main\Handlers;
 
-use Kernel\Application;
-use Main\Config;
 use Main\Router;
-use Request;
+use Kernel\Config;
+use Kernel\Application;
+use Swoole\Http\Request;
+use Swoole\Http\Response;
+use Main\Engine\RouteProcessor;
 
+/**
+ * RequestHandler class used to handle the request and route it to the appropriate controller
+ * 
+ * @package Main
+ */
 class RequestHandler
 {
-    private $routeProcessor;
-    private $config;
+    use \Singleton;
 
-    public function __construct()
+    private RouteProcessor $routeProcessor;
+    private $config;
+    private Router $router;
+
+    private function __construct()
     {
         $this->config = new Config();
-        $this->routeProcessor = new RouteProcessor($this->config->get('routes'));
+        $this->routeProcessor = new RouteProcessor(Router::$routes);
     }
 
 
@@ -24,20 +34,12 @@ class RequestHandler
      *
      * @param Request $request
      * @param Response $response
-     * @return void
      */
-    public static function handleRequest(Application $app, Request $request, Response $response)
+    public static function handleRequest(Request $request, Response $response)
     {
-        if (!self::$instance) {
-            self::$instance = new Router();
-            RequestFacade::setFacadeApplication($app);
-        }
 
         $path = $request->server['request_uri'];
         $method = $request->server['request_method'];
-
-        $app->set('request', $request);
-        $app->set('response', $response);
 
         if (isset(self::$instance->routes[$path])) {
             $route = self::$instance->routes[$path];
@@ -45,6 +47,7 @@ class RequestHandler
             if ($route['method'] === $method) {
                 $controller = new $route['controller']();
                 $controller->{$route['action']}();
+                
             } else {
                 // Handle 405 Method Not Allowed
                 $response->status(405);
@@ -56,17 +59,15 @@ class RequestHandler
             $response->end("404 Not Found");
         }
 
-        // Handle 404 Not Found
-        $response->status(404);
-        $response->end("404 Not Found");
+        return $response;
     }
 
-    public function run()
+    public static function run()
     {
         $app = Application::getInstance();
         $request = $app->get('request');
         $response = $app->get('response');
 
-        self::handleRequest($app, $request, $response);
+        self::handleRequest( $request, $response);
     }
 }

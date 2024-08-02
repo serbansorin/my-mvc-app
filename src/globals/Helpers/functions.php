@@ -42,7 +42,6 @@ function response(): Response
  * Convert Swoole request to Illuminate request.
  *
  * @param Request $swooleRequest
- * @return IlluminateRequest
  */
 // function convertToIlluminateRequest(Request $swooleRequest): IlluminateRequest
 // {
@@ -62,7 +61,6 @@ function response(): Response
  * Convert Swoole response to Illuminate response.
  *
  * @param Response $swooleResponse
- * @return IlluminateResponse
  */
 // function convertToIlluminateResponse(Response $swooleResponse): IlluminateResponse
 // {
@@ -72,7 +70,6 @@ function response(): Response
 /**
  * Get the current user.
  *
- * @return User|null
  */
 function user(): ?App\Models\User
 {

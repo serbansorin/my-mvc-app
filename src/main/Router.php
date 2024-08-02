@@ -76,6 +76,11 @@ class Router
 
     }
 
+    static function handleRequest(Request $request, Response $response)
+    {
+        return self::$httpProc->handleRequest($request, $response);
+    }
+
     /**
      * Get array from string ex: "Controller@action"
      * @param string $str

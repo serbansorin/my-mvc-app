@@ -7,23 +7,44 @@ use Main\Router;
 class RouteProcessor
 {
     private $routes = [];
-    static $newRoutes;
-    private $bindDirectly = false;
+    static $newRoutes = [];
+    private $bindDirectly = true;
 
-    public function __construct($routeArray = null, $addDirectly = false)
+    /**
+     * Process the routes from file or array and bind them to the Router::$routes
+     * @param array|string|null $routesFileOrArray
+     * @param bool|null $bindDirectly
+     */
+    public function __construct(array|string|null $routesFileOrArray = null, bool|null $bindDirectly = false)
     {
-        if (is_null($routeArray)) {
+        if (empty($routesFileOrArray)) {
             return;
         }
-        
-        $routeArray = $this->validateAndGetArray($routeArray);
 
-        $this->bindDirectly = $addDirectly;
-        $addDirectly ?: $this->setRoutes($routeArray);
+        $routesFileOrArray = $this->parseRoutes($routesFileOrArray);
+        
+        $this->setRoutes($routesFileOrArray);
+        $this->bindDirectly = $bindDirectly;
         $this->processRoutes();
     }
 
-    private function validateAndGetArray($routeArray)
+    public function bindDirectly(bool $bindDirectly = true): RouteProcessor
+    {
+        $this->bindDirectly = $bindDirectly;
+        return $this;
+    }
+
+    static function parseAndProcess(array|string $routeArray, $bindDirectly = false)
+    {
+        $inst = new self();
+        $routeArray = $inst->parseRoutes($routeArray);
+
+        $inst->setRoutes($routeArray);
+        $inst->processRoutes();
+        $inst->bindDirectly ?: $inst->mergeAndClean();
+    }
+
+    private function parseRoutes(array|string $routeArray): array
     {
         if (is_array($routeArray)) {
             return $routeArray;
@@ -46,8 +67,8 @@ class RouteProcessor
 
     public static function bindNewRoutesDirectly($newRoutes)
     {
-        $routes = new self($newRoutes);
-        $routes->applyNewRoutesAndClean();
+        $routes = new self($newRoutes, true);
+        // $routes->mergeAndClean();
     }
 
     public static function processNewRoutes($routeArray, $addDirectly = false)
@@ -55,7 +76,7 @@ class RouteProcessor
         return new self($routeArray, $addDirectly);
     }
 
-    private function processRoutes()
+    public function processRoutes()
     {
         $methods = ['get', 'post', 'put', 'delete', 'patch', 'options', 'any'];
 
@@ -72,6 +93,12 @@ class RouteProcessor
                 throw new \BadMethodCallException("Method {$method} does not exist.");
             }
         }
+    }
+
+    public function processRouteFile(array|string $routeFile)
+    {
+        $this->setRoutes($this->parseRoutes($routeFile));
+        $this->processRoutes();
     }
 
     private function addRoute($method, $path, $controller, $action, $middleware = null)
@@ -129,17 +156,19 @@ class RouteProcessor
     {
         $this->cleanSelf();
         $this->cleanOldRoutes();
+        return $this;
     }
 
-    public function applyNewRoutesAndClean()
+    public function mergeAndClean()
     {
         $this->mergeNewRoutes();
         $this->cleanSelf();
+        return $this;
     }
 
     public function __destruct()
     {
-        $this->applyNewRoutesAndClean();
+        $this->mergeAndClean();
     }
 
     public function __toString()

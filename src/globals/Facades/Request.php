@@ -1,6 +1,8 @@
 <?php
 
-
+/**
+ * @extends Swoole\Http\Request
+ */
 class Request extends Facades
 {
 	protected static function getFacadeAccessor()
