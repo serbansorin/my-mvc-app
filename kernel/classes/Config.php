@@ -4,6 +4,8 @@ namespace Kernel;
 
 class Config
 {
+    use \Singleton;
+
     private array $configFiles;
     private array $configData = [];
 
@@ -41,5 +43,15 @@ class Config
     public function getAllConfig(): array
     {
         return $this->configData;
+    }
+
+    public function __get($name)
+    {
+        return $this->getConfig($name);
+    }
+
+    public function __set($name, $value)
+    {
+        $this->configData[$name] = $value;
     }
 }

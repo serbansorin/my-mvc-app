@@ -18,14 +18,13 @@ class RequestHandler
 {
     use \Singleton;
 
-    private RouteProcessor $routeProcessor;
-    private $config;
-    private Router $router;
+    public Request $request;
+    public Response $response;
+
 
     private function __construct()
     {
-        $this->config = new Config();
-        $this->routeProcessor = new RouteProcessor(Router::$routes);
+
     }
 
 
@@ -64,6 +63,8 @@ class RequestHandler
 
     public static function run()
     {
+        $reqHandler = self::getInstance();
+
         $app = Application::getInstance();
         $request = $app->get('request');
         $response = $app->get('response');

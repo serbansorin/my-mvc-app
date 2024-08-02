@@ -8,8 +8,8 @@ use Swoole\Http\Request;
 use Swoole\Http\Response;
 use Main\Accessors\RouteGroup;
 
-use Main\Engine\RouteProcessor;
-use Main\Engine\HttpMethodProcessor;
+use Main\Http\RouteProcessor;
+use Main\Http\RouterMethods;
 
 /**
  * Router class used to handle the request and route it to the appropriate controller
@@ -23,19 +23,19 @@ class Router
     public RouteGroup $group;
     public RouteProcessor $process;
 
-    private static HttpMethodProcessor $httpProc;
+    private static RouterMethods $httpProc;
     public static $routes = [];
 
     public function __construct($routes = [])
     {
         if ($routes)
             RouteProcessor::newRoutes($routes);
-        self::$httpProc = new HttpMethodProcessor();
+        self::$httpProc = new RouterMethods();
     }
 
     public function bindNewRoutes($newRoutes): Router
     {
-        $this->routes = array_merge($this->routes, $newRoutes);
+        self::$routes = array_merge(self::$routes, $newRoutes);
         return $this;
     }
 
@@ -62,9 +62,8 @@ class Router
      * Group routes
      *
      * @param string $prefix
-     * @return void
      */
-    public function group(string $prefix, Closure $callback)
+    public function group(string $prefix, Closure $callback):self
     {
         if (is_array($callback)) {
             $this->group = new RouteGroup($prefix, $callback);
@@ -73,6 +72,7 @@ class Router
             $callback($this->group);
             $this->group->addPrefixToRoute($this->group->getRoutes());
         }
+        return $this;
 
     }
 
@@ -117,5 +117,16 @@ class Router
             'addRoute' => $instance->addRoute(...$args),
             default => throw new \BadMethodCallException("Method $method does not exist")
         };
+    }
+
+    // todo delete these ... doin some tests
+    public static function get($path, $action)
+    {
+        self::$routes['GET'][$path] = ['action' => $action];
+    }
+
+    public static function match($method, $path)
+    {
+        return self::$routes[$method][$path] ?? null;
     }
 }

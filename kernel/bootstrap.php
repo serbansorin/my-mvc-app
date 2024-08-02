@@ -15,7 +15,7 @@ $services = [
     // 'config' => \Kernel\Config::class,
     // 'app' => \Kernel\Application::class,
     'router' => $route,
-    'routeProcessor' => \Main\Engine\RouteProcessor::class
+    'routeProcessor' => \Main\Http\RouteProcessor::class
 ];
 /*   Loading services */
 

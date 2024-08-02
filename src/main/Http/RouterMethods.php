@@ -5,14 +5,36 @@ namespace Main\Engine;
 use Main\Router;
 
 /**
- * Class HttpMethodProcessor
+ * Class RouterMethods
  * 
  * This class represents the HTTP routing functionality of the application.
  */
-class HttpMethodProcessor
+class RouterMethods
 {
 
     const HTTP_METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'ANY'];
+
+    /**
+     * Get the HTTP methods that the router supports.
+     *
+     * @return array The supported HTTP methods.
+     */
+    public function getHttpMethods(): array
+    {
+        return self::HTTP_METHODS;
+    }
+
+
+    /**
+     * Check if the given method is a valid HTTP method.
+     *
+     * @param string $method The method to check.
+     * @return bool True if the method is valid, false otherwise.
+     */
+    public function isHttpMethod($method): bool
+    {
+        return in_array(strtoupper($method), self::HTTP_METHODS);
+    }
 
     /**
      * Magic method to handle dynamic method calls for adding routes.

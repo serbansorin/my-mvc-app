@@ -12,6 +12,24 @@ if ($argv[1] === 'start') {
     $commandsLoader->run($argv);
 }
 
+function startApp()
+{
+    $app = Kernel\Application::getInstance();
+
+    // Load services
+    $app->loadServices([
+        'router' => Router::class,
+        'routeProcessor' => Main\Http\RouteProcessor::class,
+        // Add other services here
+    ]);
+
+    // Process routes
+    $app->processRoutes();
+
+    // Handle the request
+    $app->handleRequest();
+}
+
 // $otherCommands = [
 //     'help' => 'Show the available commands',
 //     'list' => 'List all the available commands',

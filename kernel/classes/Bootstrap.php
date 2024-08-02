@@ -1,44 +1,29 @@
 <?php
 namespace Kernel;
 
-use Main\Engine\RouteProcessor;
+use Main\Http\RouteProcessor;
 use Main\Router;
 
+/**
+ * Init Application and Config
+ * then load services
+ */
 class Bootstrap
 {
-    private static $instance = null;
+    use \Singleton;
+
     public static Config $config;
     public static Application $app;
-    public static Router $router;
-    public static RouteProcessor $routeProcessor;
-
-    public static array $services = [
-        'config' => Config::class,
-        'app' => Application::class,
-        'router' => Router::class,
-        'routeProcessor' => RouteProcessor::class
-    ];
+    public static Services $services;
 
 
-    public function __construct()
+    private function __construct()
     {
-        if (self::$instance !== null) {
-            return;
-        }
-
         self::$app = Application::getInstance();
         self::$config = new Config(CONFIG_DIR);
         self::$config->loadConfigFiles();
-
-        self::$app->set('config', $this->config);
-
-        self::$instance = $this;
     }
 
-    public static function init()
-    {
-        return self::$instance ?? new self();
-    }
 
     public static function reload()
     {

@@ -1118,7 +1118,7 @@
                     "dev-master": "2.11-dev"
                 },
                 "hyperf": {
-                    "config": "Hyperf\\Engine\\ConfigProvider"
+                    "config": "Hyperf\\Http\\ConfigProvider"
                 }
             },
             "autoload": {
@@ -1126,7 +1126,7 @@
                     "src/Functions.php"
                 ],
                 "psr-4": {
-                    "Hyperf\\Engine\\": "src/"
+                    "Hyperf\\Http\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1192,14 +1192,14 @@
             },
             "autoload": {
                 "psr-4": {
-                    "Hyperf\\Engine\\Contract\\": "src/"
+                    "Hyperf\\Http\\Contract\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
-            "description": "Contract for Coroutine Engine",
+            "description": "Contract for Coroutine Http",
             "keywords": [
                 "contract",
                 "coroutine",

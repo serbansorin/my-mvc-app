@@ -1,8 +1,8 @@
 <?php
 
-use Hyperf\Database\Model\Model;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
+use Hyperf\Database\Model\Model;
 
 // use Illuminate\Http\Request as IlluminateRequest;
 // use Illuminate\Http\Response as IlluminateResponse;

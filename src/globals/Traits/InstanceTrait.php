@@ -4,6 +4,7 @@ trait InstanceTrait
 {
 
     private $instance = null;
+    static $getter;
 
     public static function getInstance()
     {
@@ -14,20 +15,20 @@ trait InstanceTrait
         return static::$instance;
     }
 
-    public function __get($name)
+    public static function newInstance($getter, $args)
     {
-        if (!property_exists($this, $name)) {
-            return $this->$name = app()->$name;
+        return new static::$getter(...$args);
+    }
+
+    public function setGetter($class)
+    {
+        static::$getter = $class::class;
+    }
+
+    public static function __callStatic($method, $args)
+    {
+        if (method_exists(static::$getter, $method)) {
+            return static::$getter::$method(...$args);
         }
-    }
-
-    public function __set($name, $value)
-    {
-        $this->$name = $value;
-    }
-
-    public static function instance()
-    {
-        return new static();
     }
 }

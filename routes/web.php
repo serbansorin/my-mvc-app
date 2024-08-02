@@ -1,8 +1,12 @@
 <?php
 
 use App\Controllers\IndexController;
+use Main\Router;
 
-$routeProcessor = new \Main\Engine\RouteProcessor(__DIR__ . '/../routes/web.php');
+Router::get('/home', 'App\Controllers\HomeController@index');
+Router::get('/about', 'App\Controllers\AboutController@index');
+
+// or
 
 return [
     // this will add these middleware to all routes
