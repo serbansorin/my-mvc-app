@@ -4,6 +4,11 @@ namespace Kernel;
 
 class Services
 {
+	use \InstanceTrait;
+
+	private function __construct()
+	{
+	}
 	/**
 	 * Register services
 	 *

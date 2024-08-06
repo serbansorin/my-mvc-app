@@ -1,10 +1,10 @@
 <?php
 
-$constsDefined ??= false;
+// $constsDefined ??= false;
 
-if ($constsDefined) {
-    return [$route, $app, $bootstrap];
-}
+// if (defined('ROOT_DIR') {
+//     return [$route, $app, $bootstrap];
+// }
 
 const APP_DIR = ROOT_DIR . '/app';
 const CONFIG_DIR = ROOT_DIR . '/config';
@@ -16,4 +16,4 @@ const VENDOR_DIR = ROOT_DIR . '/vendor';
 const VIEW_DIR = APP_DIR . '/views';
 const KERNEL_DIR = ROOT_DIR . '/boot';
 
-$constsDefined = true;
+// $constsDefined = true;
