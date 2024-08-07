@@ -80,6 +80,12 @@ class Config
         return $this->configData;
     }
 
+    static function load(string $file): array|string
+    {
+        $config = require_once CONFIG_DIR . DIRECTORY_SEPARATOR . $file . '.php';
+        return $config;
+    }
+
     public function __get($name)
     {
         return $this->getConfig($name);
@@ -114,5 +120,7 @@ class Config
     {
         $callbackArgs = func_get_args();
         $config = Arr::flatten($this->configData);
+
+        return $config;
     }
 }
