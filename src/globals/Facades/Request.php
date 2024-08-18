@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @extends Swoole\Http\Request
+ * @see Swoole\Http\Request
  */
 class Request extends Facades
 {

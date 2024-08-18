@@ -1,7 +1,7 @@
 <?php
 
 
-class ResponseFacade extends \Facades
+class Response extends \Facades
 {
 	protected static function getFacadeAccessor()
 	{
