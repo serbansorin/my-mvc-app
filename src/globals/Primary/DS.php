@@ -11,30 +11,35 @@ use SplQueue;
 use SplPriorityQueue;
 use Swoole\StringObject;
 
-class DS {
-    public static function List() {
-        return new SplDoublyLinkedList();
+class DS
+{
+    public static function List()
+    {
+        return new SplDoublyLinkedsqsqa();
     }
 
-    public static function ListArray(array $list = []) {
+    public static function ListArray(array $list = [])
+    {
         $arr = new SplDoublyLinkedList();
         array_walk($list, fn($value) => $arr->push($value));
         return $list;
     }
 
-    public static function String(string $data = '') {
+    public static function String(string $data = '')
+    {
         return new StringObject($data);
     }
 
-    public static function Array(array $data = []) {
+    public static function Array(mixed $data = [])
+    {
         return new ArrayObject($data);
     }
 
-    public static function ArrayFixed(mixed $data = null) {
+    public static function ArrayFixed(mixed $data = null)
+    {
         if (is_array($data)) {
             return (new SplFixedArray())->fromArray($data);
-        }
-        elseif (is_int($data)) {
+        } elseif (is_int($data)) {
             return new SplFixedArray($data);
         }
 
@@ -42,27 +47,33 @@ class DS {
         return (new SplFixedArray());
     }
 
-    public static function Deque(array $data = []) {
+    public static function Deque(array $data = [])
+    {
         return new ArrayObject($data);
     }
 
-    public static function Set(array $data = []) {
+    public static function Set(array $data = [])
+    {
         return new SplObjectStorage();
     }
 
-    public static function Map(array $data = []) {
+    public static function Map(array $data = [])
+    {
         return new SplObjectStorage();
     }
 
-    public static function Stack() {
+    public static function Stack()
+    {
         return new SplStack();
     }
 
-    public static function Queue() {
+    public static function Queue()
+    {
         return new SplQueue();
     }
 
-    public static function PriorityQueue() {
+    public static function PriorityQueue()
+    {
         return new SplPriorityQueue();
     }
 }
@@ -70,7 +81,7 @@ class DS {
 if (!function_exists('ds')) {
     /**
      */
-    function ds($type,$data = null)
+    function ds($type = 'table', $data = null)
     {
         return match ($type) {
             'list' => DS::List(),
@@ -84,7 +95,14 @@ if (!function_exists('ds')) {
             'stack' => DS::Stack(),
             'queue' => DS::Queue(),
             'priority_queue' => DS::PriorityQueue(),
-            default => null,
+            'table' => function () use ($data) {
+                    $table = new \Swoole\Table(1024);
+                    foreach ($data as $key => $value) {
+                        $table->set($key, $value);
+                    }
+                    return $table;
+                },
+            default => null
         };
     }
 }

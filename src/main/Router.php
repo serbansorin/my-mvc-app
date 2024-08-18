@@ -125,8 +125,20 @@ class Router
         self::$routes['GET'][$path] = ['action' => $action];
     }
 
-    public static function match($method, $path)
+    public static function getMatchedRoute($method, $path)
     {
-        return self::$routes[$method][$path] ?? null;
+        $route = self::$routes[$method][$path] ?? null;
+
+        if (!$route) { // if route not found
+
+            $regex = preg_replace('/{([^}]+)}/', '(?P<$1>[^\/]+)', $route);
+            // look for route with variables
+            $pathParts = explode('/', $path);
+        }
+    }
+
+    public static function isRouteMatched($method, $path): bool
+    {
+        return isset(self::$routes[$method][$path]);
     }
 }

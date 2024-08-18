@@ -46,11 +46,6 @@ class Application
         unset($this->container[strtolower($key)]);
     }
 
-    public function loadServices()
-    {
-        Services::register();
-    }
-
     public function processRoutes()
     {
         require_once CONFIG_DIR . '/routes.php';

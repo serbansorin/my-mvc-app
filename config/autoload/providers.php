@@ -1,65 +1,35 @@
 <?php
 
-enum Providers: string
+use Kernel\Config;
+
+
+enum Providers
 {
-    case Database = 'database';
-    case Mail = 'mail';
-    case Queue = 'queue';
-    case View = 'view';
+    case Logger = 'logger';
+    case ErrorHandler = 'errorHandler';
+    case CSRF = 'csrf';
     case Session = 'session';
-    case Cache = 'cache';
+    case DS = 'ds';
+    case Collection = 'collection';
+    case Struct = 'struct';
+    case Config = 'config';
 }
 
-class Provider
+
+function getEnumCaseName(Providers $provider): string
 {
-    public static function get(Providers $provider): ServiceProviderInterface
-    {
-        return match ($provider) {
-            Providers::Database => new \Providers\DatabaseProvider(),
-            Providers::Mail => new \Providers\MailProvider(),
-            Providers::Queue => new \Providers\QueueProvider(),
-            Providers::View => new \Providers\ViewProvider(),
-            Providers::Session => new \Providers\SessionProvider(),
-            Providers::Cache => new \Providers\CacheProvider(),
-
-            default => new \Providers\DatabaseProvider()
-        };
-    }
-
-    public static function toArray(): array
-    {
-        return [
-            Providers::Database,
-            Providers::Mail,
-            Providers::Queue,
-            Providers::View,
-            Providers::Session,
-            Providers::Cache
-        ];
-    }
-
-    function __toString()
-    {
-        return json_encode($this);
-    }
-
-    function __wakeup()
-    {
-        return \Swoole\Serialize::unpack($this);
-    }
-
-    function __sleep()
-    {
-        return [];
-    }
-
-    function __unserialize($data)
-    {
-        return \Swoole\Serialize::unpack($data);
-    }
-
-    function __serialize()
-    {
-        return \Swoole\Serialize::pack($this);
-    }
+    $caseEnumReflection = new \ReflectionClass($provider);
+    return $caseEnumReflection->getShortName();
 }
+
+
+$serviceProviders = [
+    'config' => Config::getInstance(),
+    // 'logger' => \Main\Providers\Logger::class,
+    // 'errorHandler' => \Main\Providers\ErrorHandler::class,
+    // 'csrf' => \Main\Providers\CSRFServiceProvider::class,
+    // 'session' => \Main\Providers\Session::class,
+    'ds' => DS::class,
+    // 'collection' => \Main\Providers\Collection::class,
+    // 'struct' => \Main\Providers\Struct::class
+];

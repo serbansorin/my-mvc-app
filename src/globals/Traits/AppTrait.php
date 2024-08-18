@@ -1,8 +1,10 @@
 <?php
 
 
+
 trait AppTrait
 {
+    #[\Attribute]
     public static function boot()
     {
         return new static();
